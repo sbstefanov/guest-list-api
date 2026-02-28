@@ -1,12 +1,10 @@
 import express from "express";
 import mysql from "mysql2/promise";
 import dotenv from "dotenv";
-import cors from "cors";
 
 dotenv.config();
 
 const app = express();
-app.use(cors());
 app.use(express.json());
 app.use(express.static("public"));
 
