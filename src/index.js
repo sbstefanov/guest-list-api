@@ -16,27 +16,16 @@ app.use(express.static("public"));
  */
 const isRailway = !!process.env.RAILWAY_ENVIRONMENT;
 
-const dbConfig =
-  process.env.MYSQL_URL
-    ? process.env.MYSQL_URL
-    : {
-        host: process.env.MYSQLHOST || process.env.DB_HOST || "127.0.0.1",
-        user: process.env.MYSQLUSER || process.env.DB_USER || "root",
-        password: process.env.MYSQLPASSWORD || process.env.DB_PASSWORD || "",
-        database:
-          process.env.MYSQLDATABASE ||
-          process.env.MYSQL_DATABASE ||
-          process.env.DB_NAME ||
-          "guestdb",
-        port: Number(process.env.MYSQLPORT || process.env.DB_PORT || 3306),
-        waitForConnections: true,
-        connectionLimit: 10,
-        queueLimit: 0,
-        enableKeepAlive: true,
-        keepAliveInitialDelay: 0,
-      };
-
-const pool = mysql.createPool(dbConfig);
+const pool = mysql.createPool({
+  host: process.env.MYSQLHOST,
+  port: Number(process.env.MYSQLPORT),
+  user: process.env.MYSQLUSER,
+  password: process.env.MYSQLPASSWORD,
+  database: process.env.MYSQL_DATABASE,
+  waitForConnections: true,
+  connectionLimit: 10,
+  queueLimit: 0,
+});
 
 // Retry DB connect (Railway понякога стартира app преди DB да е ready)
 async function waitForDb(retries = 40, delayMs = 1000) {
